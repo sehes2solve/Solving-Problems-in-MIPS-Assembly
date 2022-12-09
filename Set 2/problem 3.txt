@@ -1,0 +1,52 @@
+# a = $s0, i=$s2 , j=$s3 , C=$t0
+# used reg $s0,$s2,$s3,$s4,$s5,$t0,$t1,$t2,$t5,$t4,$t3,$t6,$t7
+.data
+    C: .space 100
+    space: .asciiz " "
+.text
+main:
+    li $s0,15
+    la $t0 , C
+    li $s2,0
+    li $s5 , 4
+loop1:   
+    beq $s2 , $s0 , printArr
+    nop
+    li $s3,0
+    loop2:
+        beq $s3 , $s2 , endNested
+        nop
+        mul $t2 , $s2 , $s5  # $t2=$s2*4
+        add $t6 , $t2 , $t0 # c[i]
+        lw $t4 , 0($t6)
+        add $t7 , $t4 , $s3
+        sw $t7 , 0($t6)
+        addi $s3 , 1
+        j loop2
+    endNested:
+    addi $s2,1
+    j loop1
+   printArr:
+    # printing the content of the array
+    li $t5,0
+    li $s4 , 4
+loop3:
+    beq $t5 , $s0 , endloop
+    nop
+    mul $t3 , $t5 , $s4 # $t3 = $t5*4
+    add $t6 , $t3 , $t0
+    lw $a0 , 0($t6)
+    li $v0, 1    
+    syscall
+
+    #printing space
+    la $a0, space
+    li $v0, 4
+    syscall
+
+    addi $t5 , 1
+    j loop3
+endloop:
+    li $v0, 10    
+    syscall
+

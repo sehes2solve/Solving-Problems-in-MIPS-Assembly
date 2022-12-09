@@ -1,0 +1,70 @@
+# vowels = $s0
+# used registers $t0 , $t1 , $t2 , $s0 , 
+
+.data
+    buffer: .space 100
+    str1:  .asciiz "Enter a word "
+    space: .asciiz " "
+.text
+
+main:
+    la $a0, str1    # Load and print string asking for string
+    li $v0, 4
+    syscall
+    la $a0, buffer
+    li $v0, 8
+    syscall
+
+    # now t5 also holds the input
+    move $t5 ,  $a0
+
+    li $s0 , 0
+    li $s1 , 'a'
+    li $s2 , 'o'
+    li $s3 , 'u'
+    li $s4 , 'i'
+    li $s5 , 'e'
+    li $s6 , 'A'
+    li $s7 , 'O'
+    li $t3 , 'I'
+    li $t4 , 'E'
+    li $t5 , 'U'
+    li $t0 , 0 # loop counter
+    # we loop untill we find the null character
+    loop:
+        add $t2 , $t0 , $a0
+        
+        # t1 holds the current character
+        lb $t1 , 0($t2)
+        # we loop untill we find the null character
+        beq $t1 , $0 , endloop
+        nop
+        beq $t1 , $s1 , afterIfOk
+        beq $t1 , $s2 , afterIfOk
+        beq $t1 , $s3 , afterIfOk
+        beq $t1 , $s4 , afterIfOk
+        beq $t1 , $s5 , afterIfOk
+        beq $t1 , $s6 , afterIfOk
+        beq $t1 , $s7 , afterIfOk
+        beq $t1 , $t3 , afterIfOk
+        beq $t1 , $t4 , afterIfOk
+        beq $t1 , $t5 , afterIfOk
+        else:
+            j afterIf
+        afterIfOk:
+            addi $s0 , $s0 , 1
+        afterIf:
+            addi $t0 , 1
+        j loop
+    endloop:
+        # printing the number of vowels
+        add $a0 , $s0 , $0
+        li $v0 , 1
+        syscall
+        li $v0, 10    
+        syscall
+        
+
+
+
+

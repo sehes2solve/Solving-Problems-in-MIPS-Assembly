@@ -1,0 +1,26 @@
+# $a0 = n
+#jal
+#jr $ra
+main:
+    li $a0 , 10
+    jal sumOdd
+    
+    add $a0 , $v0 , $0
+    li $v0 , 1
+    syscall
+    li $v0 , 10
+    syscall
+sumOdd:
+    li $v0 , 0
+    li $t0 , 0
+    loop:
+        beq $t0 , $a0 , endLoop
+        andi $t1 , $t0 , 1
+        if:        
+            beq $t1,$0,else
+            add $v0 , $v0 , $t0
+        else:
+            addi $t0 , $t0 , 1
+        j loop
+    endLoop:
+        jr $ra

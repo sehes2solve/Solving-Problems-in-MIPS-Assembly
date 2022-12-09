@@ -1,0 +1,22 @@
+# g is $s0 and h is $s1
+main:
+    li $s0 , 6
+    li $s1 , 6
+    slt $t0 , $s1 , $s0
+    beq $t0 , $0 , elseIf
+    nop             # added a nop to prevent the addition when branch is taken
+    add $s0 , $s0 , $s1
+    j endIf
+elseIf:
+    nop
+    slt $t0 , $s0 , $s1
+    beq $t0 , $0 , else
+    nop             # added a nop to prevent the addition when branch is taken
+    sub $s0 , $s0 , $s1
+    j endIf
+else:
+    nop
+    mul $s0 , $s0 , $s1
+endIf:
+    li $v0,10
+    syscall

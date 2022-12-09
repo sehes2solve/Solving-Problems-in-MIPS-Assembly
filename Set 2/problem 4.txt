@@ -1,0 +1,41 @@
+
+.data
+    oddWord:  .asciiz "Odd"
+    evenWord:  .asciiz "Even"
+.text
+
+main:
+    li $a0 , 5
+    jal isOdd
+    beq $v1 , $0 , even
+    la $a0 , oddWord
+    j after
+
+    even:
+    la $a0 , evenWord
+
+    after:
+    li $v0 , 4
+    syscall
+    li $v0 , 10
+    syscall
+
+# return is saved in $v1
+isOdd:
+
+addi $sp , $sp , -4
+sw $ra , 0($sp)
+
+jal isEven
+
+lw $ra , 0($sp)
+add $sp , $sp , 4
+xor $v1 , $v1 , 1
+jr $ra
+
+
+isEven:
+
+and $v1 , $a0 , 1
+xor $v1 , $v1 , 1
+jr $ra

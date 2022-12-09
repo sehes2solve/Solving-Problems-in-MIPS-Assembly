@@ -1,0 +1,22 @@
+# $s0 = g , $s1 = h
+
+main:
+    li $s0 , -1
+    li $s1 , 10
+    slt $t0 , $0 , $s0
+    beq $t0 , $0 , else
+    slt $t0 , $s0 , $s1
+    beq $t0 , $0 , tryEq
+    j ok
+    tryEq:
+        beq $s0 , $s1 , else
+        j ok
+    ok:
+        add $s0 , $s1 , $0
+        j exit
+    else:
+        add $s1 , $s0 , $0
+        j exit
+    exit:
+        li $v0 , 10
+        syscall

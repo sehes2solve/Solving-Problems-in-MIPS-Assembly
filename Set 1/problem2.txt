@@ -1,0 +1,73 @@
+# upper = $s0 , lower = $1
+# used registers $t0 , $t1 , $t2 , $s0 , $s1 , $s2 , $s3 , $s4 , $s5
+
+.data
+    buffer: .space 100
+    str1:  .asciiz "Enter a word "
+    space: .asciiz " "
+.text
+
+main:
+    la $a0, str1    # Load and print string asking for string
+    li $v0, 4
+    syscall
+    la $a0, buffer
+    li $v0, 8
+    syscall
+
+    # now t5 also holds the input
+    move $t5 ,  $a0
+
+    li $s0 , 0
+    li $s1 , 0
+    li $t0 , 0 # loop counter
+    li $s2 , 96 # lower_bound for lower
+    li $s3 , 123 # upper_bound for lower
+    li $s4 , 64 # lower_bound for upper
+    li $s5 , 91 # upper_bound for upper
+    # we loop untill we find the null character
+    loop:
+        add $t2 , $t0 , $a0
+        
+        # t1 holds the current character
+        lb $t1 , 0($t2)
+        # we loop untill we find the null character
+        beq $t1 , $0 , endloop
+        nop
+        if:
+            slt $t3 , $t1 , $s5
+            beq $t3 , $0 , notUpper
+            slt $t3 , $s4 , $t1
+            beq $t3 , $0 , notUpper
+            # it's an upper letter
+            addi $s0 , 1
+            j afterIf
+        notUpper:
+            slt $t3 , $t1 , $s3
+            beq $t3 , $0 , afterIf
+            slt $t3 , $s5 , $t1
+            beq $t3 , $0 , afterIf
+            # it's a lower letter
+            addi $s1 , 1
+        afterIf:
+            addi $t0 , 1
+        j loop
+    endloop:
+        # printing the number of uppers
+        add $a0 , $s0 , $0
+        li $v0 , 1
+        syscall
+        #printing space
+        la $a0, space
+        li $v0, 4
+        syscall
+        # printing the number of lowers
+        add $a0 , $s1 , $0
+        li $v0 , 1
+        syscall
+        li $v0, 10    
+        syscall
+
+
+
+
